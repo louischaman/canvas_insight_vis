@@ -5,6 +5,8 @@ library(ggplot2)
 
 source('CL_ward_contact_vs_labour_density.R')
 source("CL_roadgroup_contact_vs_labour_density.R")
+source("CL_Tory_Labour_density_roadgroups.R")
+source("turnoutness_vs_labourness.R")
 
 # generate list of plot
 generate_plot_list <- function(){
@@ -23,20 +25,26 @@ generate_plot_list <- function(){
 
 # generate temp files from list
 generate_plot_zip <- function(zip_file, plot_list){
-  tmp <- tempfile()
-  on.exit(unlink(tmp))
-  dir.create(tmp)
-  file_name_array = c()
-  for(i in 1:length(plot_list)){
-    
-    plot_file_name = file.path(tmp, names(plot_list)[i]  )
-    on.exit(unlink(plot_file_name))
-    ggsave(plot_list[[i]], file = plot_file_name)
-    print(plot_file_name)
-    file_name_array = c(file_name_array, plot_file_name)
-  }
-  zipr(zip_file, file_name_array)
-  return(file_name_array)
+  shiny::withProgress(
+    message = paste0("Zipping the plots"),
+    value = 0,
+    {
+      tmp <- tempfile()
+      on.exit(unlink(tmp))
+      dir.create(tmp)
+      file_name_array = c()
+      for(i in 1:length(plot_list)){
+        shiny::incProgress( 1/length(plot_list)  )
+        
+        plot_file_name = file.path(tmp, names(plot_list)[i]  )
+        on.exit(unlink(plot_file_name))
+        ggsave(plot_list[[i]], file = plot_file_name)
+        print(plot_file_name)
+        file_name_array = c(file_name_array, plot_file_name)
+      }
+      zipr(zip_file, file_name_array)
+    }
+  )
 }
 
 ui <- fluidPage(
@@ -87,15 +95,19 @@ server <- function(input, output) {
     
     content = function(file) {
       shiny::withProgress(
-        message = paste0("Creating your plots this may take a few seconds"),
+        message = paste0("Creating your plots"),
         value = 0,
         {
           input_data = getData()
           plot_list_ward = generate_plots_ward_contact(input_data)
           shiny::incProgress(1/10)
           plot_list_road = generate_plots_road_contact(input_data)
+          shiny::incProgress(2/10)
+          plot_list_tory = generate_plots_tory_labour_density(input_data)
           shiny::incProgress(3/10)
-          plot_list = c(plot_list_ward, plot_list_road)
+          plot_list_turnout = generate_plots_turnoutness(input_data)
+          shiny::incProgress(4/10)
+          plot_list = c(plot_list_ward, plot_list_road, plot_list_tory, plot_list_turnout)
           generate_plot_zip(file, plot_list)
         }
       
