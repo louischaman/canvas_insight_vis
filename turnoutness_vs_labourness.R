@@ -58,13 +58,14 @@ generate_plots_turnoutness = function(roads){
                         labs(fill = "Labourness") +
                         xlab("Road Group") +
                         ylab("Turnoutness") +
+                        coord_flip() +
                         theme(axis.text.x = element_text(angle = 90),
                               text = element_text(size = 8)) +
                         scale_fill_gradient(low = "pink", high = "darkred") +
-                        coord_cartesian(xlim = NULL, ylim = c(0, 1)) +
+                        # coord_cartesian(xlim = NULL, ylim = c(0, 1)) +
                         ggtitle(plot_title) + theme_bw()
     
-    plot_name <- paste0("Ward_Road_Groups", i,".png")
+    plot_name <- paste0("Turnout_vs_Labour_", i,".png")
     
     plot_list[[plot_name]] <- temp_plot
     
