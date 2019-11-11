@@ -11,8 +11,10 @@ library(dplyr)
 #                            header = T, row.names = NULL, quote = "\"")
 
 generate_plots_road_contact = function(roads){
-  roads$L_density <- (roads$Labour/roads$Contacted.ever) #make density
-  roads$Ward <- tolower(roads$Ward) #make lowercase
+  names(roads) <- tolower(names(roads))
+  roads$l_density <- (roads$labour/roads$contacted.ever) #make density
+  roads$ward <- tolower(roads$ward) #make lowercase
+  
   
   # ### Loop to extract all roadgroups for each ward into a separate object
   # for (i in roads$Ward){
@@ -21,15 +23,15 @@ generate_plots_road_contact = function(roads){
   # }
   
   ###Road group level contact rate and Labour density to show where we have least contact
-  uniq_wards <- unique(roads$Ward)
+  uniq_wards <- unique(roads$ward)
   
   plot_list <- list()
   
   for (i in uniq_wards) {
-    temp_plot <- ggplot(data = subset(roads, Ward == i),
-                        aes(x = reorder(Roadgroup, Contact.rate),
-                            y = Contact.rate,
-                            fill = L_density)) +
+    temp_plot <- ggplot(data = subset(roads, ward == i),
+                        aes(x = reorder(roadgroup, contact.rate),
+                            y = contact.rate,
+                            fill = l_density)) +
       geom_col() +
       coord_flip() +
       labs(fill = "Labour\nDensity", y = "Contact Rate", x = "Road Group") +
