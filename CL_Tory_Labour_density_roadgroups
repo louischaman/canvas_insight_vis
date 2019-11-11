@@ -1,0 +1,32 @@
+generate_plots_tory_labour_density <- function(roads) {
+names(roads) <- tolower(names(roads)) #make all colnames lowercase
+
+roads$tory.against <- roads$conservative + roads$against #pool tory and against voter IDs
+roads$t.density <- roads$tory.against / roads$contact.ever #tory+against density
+roads$l.density <- roads$labour / roads$contact.ever #labour density
+
+uniq_wards <- unique(roads$ward)
+
+plot_list <- list()
+
+for (i in uniq_wards) {
+  temp_plot <- ggplot(data = subset(roads, ward == i),
+                      aes(x = reorder(roadgroup, -t.density),
+                          y = t.density,
+                          fill = l.density)) +
+    geom_col(position = "dodge2", width = 0.7) +
+    labs(fill = "Labour density", y = "Tory/Against density", x = "Road Group") +
+    theme(axis.text.x = element_text(angle = 90),
+          text = element_text(size = 8)) +
+    scale_fill_gradient(low = "pink", high = "darkred") +
+    ggtitle(i, subtitle = "Tory and Labour density per road group")
+  
+  plot_name <- paste0("tory_labour_density_roadgroups_", i,".png")
+  
+  plot_list[[plot_name]] <- temp_plot
+  
+}
+
+return(plot_list)
+
+}
