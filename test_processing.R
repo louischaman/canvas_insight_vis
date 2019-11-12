@@ -10,9 +10,15 @@ source("CL_Tory_Labour_density_roadgroups.R")
 source("turnoutness_vs_labourness.R")
 source("generate_plot_zip.R")
 
-input_data = read.csv('../20191107 pv_ward_road_mosaic.csv', sep = ",",
+input_data = read.csv('../priorityareas.csv', sep = ",",
                       header = T, row.names = NULL, quote = "\"")
 names(input_data)
+
+input_data$Contact.rate =  as.numeric(gsub("%", "",input_data$Contact.rate))/100
+input_data$Promise.rate =  as.numeric(gsub("%", "",input_data$Promise.rate))/100
+input_data$Turnoutness =  as.numeric(gsub("%", "",input_data$Turnoutness))/100
+input_data$Labourness =  as.numeric(gsub("%", "",input_data$Labourness))/100
+
 plot_list_ward = generate_plots_ward_contact(input_data)
 plot_list_road = generate_plots_road_contact(input_data)
 plot_list_tory = generate_plots_tory_labour_density(input_data)

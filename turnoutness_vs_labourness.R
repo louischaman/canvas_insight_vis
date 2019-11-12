@@ -17,16 +17,17 @@ library(reshape2)
 # roads <- read.csv("../sample_dat.csv")
 # pt = generate_plots_turnoutness(roads)
 generate_plots_turnoutness = function(roads){
-  roads$Roadgroup <- gsub(":.*", "", roads$Roadgroup) #remove punctuation, space, etc
-  roads$Roadgroup <- gsub("-.*", "", roads$Roadgroup)
-  roads$Roadgroup <- gsub("/.*", "", roads$Roadgroup)
-  roads$Roadgroup <- gsub(" ", "", roads$Roadgroup)
-  roads$Roadgroup <- gsub("[A-Z][a-z]*$", "", roads$Roadgroup) #remove letters from end of string
-  roads$Roadgroup <- gsub(" ", "", roads$Roadgroup)
+  # roads$Roadgroup <- gsub(":.*", "", roads$Roadgroup) #remove punctuation, space, etc
+  # roads$Roadgroup <- gsub("-.*", "", roads$Roadgroup)
+  # roads$Roadgroup <- gsub("/.*", "", roads$Roadgroup)
+  # roads$Roadgroup <- gsub(" ", "", roads$Roadgroup)
+  # roads$Roadgroup <- gsub("[A-Z][a-z]*$", "", roads$Roadgroup) #remove letters from end of string
+  # roads$Roadgroup <- gsub(" ", "", roads$Roadgroup)
   
-  roads$Roadgroup <- as.character(roads$Roadgroup)
-  roads$Roadgroup <-str_trunc(roads$Roadgroup, 7, "right", ellipsis = "")
-  table(roads$Roadgroup)
+  # roads$Roadgroup <- as.character(roads$Roadgroup)
+  # roads$Roadgroup <-str_trunc(roads$Roadgroup, 7, "right", ellipsis = "")
+  # table(roads$Roadgroup)
+  roads$Roadgroup_label =  roads$Roadgroup
   
   ### Create data
   ## Roadgroups data
@@ -52,8 +53,9 @@ generate_plots_turnoutness = function(roads){
     
     plot_title <- paste0(toupper(i), " WARD ROAD GROUPS")
     
-    temp_plot <- ggplot(data = subset(roads, Ward == i),
-                        aes(x = reorder(Roadgroup, Turnoutness), y = Turnoutness, fill = Labourness)) +
+   
+     temp_plot <- ggplot(data = subset(roads, Ward == i),
+                        aes(x = reorder(Roadgroup_label, Turnoutness), y = Turnoutness, fill = Labourness)) +
                         geom_col() +
                         labs(fill = "Labourness") +
                         xlab("Road Group") +

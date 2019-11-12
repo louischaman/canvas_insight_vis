@@ -58,13 +58,8 @@ server <- function(input, output) {
   
   
   output$contents <- renderTable(
-    {
-    char_data = getData()
-    for (col in names(input_data)){
-      char_data[col] = char_data[[col]] %>% as.character() %>% substring(1,40)
-    }
-    char_data
-    }
+
+    getData()
   )
   
   output$downloadData <- downloadHandler(
