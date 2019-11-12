@@ -1,4 +1,9 @@
 generate_plots_tory_labour_density <- function(roads) {
+
+roads$Contact.rate <- as.numeric(sub("%", "", roads$Contact.rate, fixed = T))/100 #change Factor data type into decimal
+roads$Labourness <- as.numeric(sub("%", "", roads$Labourness, fixed = T))/100
+roads$Turnoutness <- as.numeric(sub("%", "", roads$Turnoutness, fixed = T))/100
+
 names(roads) <- tolower(names(roads)) #make all colnames lowercase
 
 roads$tory.against <- roads$conservative + roads$against #pool tory and against voter IDs
