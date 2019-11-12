@@ -19,3 +19,8 @@ plot_list_tory = generate_plots_tory_labour_density(input_data)
 plot_list_turnout = generate_plots_turnoutness(input_data)
 plot_list = c(plot_list_ward, plot_list_road, plot_list_tory, plot_list_turnout)
 generate_plot_zip_simple('../test.zip', plot_list)
+
+char_data = input_data
+for (col in names(input_data)){
+  char_data[col] = char_data[[col]] %>% as.character() %>% substring(1,40)
+}

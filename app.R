@@ -11,7 +11,7 @@ source("generate_plot_zip.R")
 
 ui <- fluidPage(
   fluidPage(
-    titlePanel("Uploading Files"),
+    titlePanel("Canvas Data Visualiser"),
     sidebarLayout(
       sidebarPanel(
         fileInput('file1', 'Choose CSV File',
@@ -22,6 +22,8 @@ ui <- fluidPage(
         downloadButton('downloadData', 'Download')
       ),
       mainPanel(
+        fluidPage(p('Here is a link to the documentation '), 
+                  a('Documentation', href= 'https://docs.google.com/document/d/11YGBxf38mNZ9iD8u-91wrKKhqe1lX0myUkrvgaBE0wo/edit') ),
         tableOutput('contents')
       )
     )
@@ -44,9 +46,13 @@ server <- function(input, output) {
   
   
   output$contents <- renderTable(
-    
-    getData()
-    
+    {
+    char_data = getData()
+    for (col in names(input_data)){
+      char_data[col] = char_data[[col]] %>% as.character() %>% substring(1,40)
+    }
+    char_data
+    }
   )
   
   output$downloadData <- downloadHandler(
