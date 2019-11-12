@@ -3,6 +3,10 @@ library(magrittr)
 library(zip)
 library(ggplot2)
 
+# deploy with:
+# rsconnect::deployApp('.')
+
+
 source('CL_ward_contact_vs_labour_density.R')
 source("CL_roadgroup_contact_vs_labour_density.R")
 source("CL_Tory_Labour_density_roadgroups.R")
@@ -39,8 +43,16 @@ server <- function(input, output) {
     if (is.null(input$file1))
       return(NULL)
     
-    read.csv(inFile$datapath, sep = ",",
+    input_data = read.csv(inFile$datapath, sep = ",",
              header = T, row.names = NULL, quote = "\"")
+    
+    
+    input_data$Contact.rate =  as.numeric(gsub("%", "",input_data$Contact.rate))/100
+    input_data$Promise.rate =  as.numeric(gsub("%", "",input_data$Promise.rate))/100
+    input_data$Turnoutness =  as.numeric(gsub("%", "",input_data$Turnoutness))/100
+    input_data$Labourness =  as.numeric(gsub("%", "",input_data$Labourness))/100
+    
+    input_data
     
   } )
   
