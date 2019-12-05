@@ -12,6 +12,7 @@ source("CL_roadgroup_contact_vs_labour_density.R")
 source("CL_Tory_Labour_density_roadgroups.R")
 source("turnoutness_vs_labourness.R")
 source("generate_plot_zip.R")
+source("CL_lab_lib_density_vs_contact.R")
 
 ui <- fluidPage(
   fluidPage(
@@ -79,10 +80,13 @@ server <- function(input, output) {
           plot_list_road = generate_plots_road_contact(input_data)
           shiny::incProgress(2/10)
           plot_list_tory = generate_plots_tory_labour_density(input_data)
-          shiny::incProgress(3/10)
+          shiny::incProgress(2/10)
           plot_list_turnout = generate_plots_turnoutness(input_data)
-          shiny::incProgress(4/10)
-          plot_list = c(plot_list_ward, plot_list_road, plot_list_tory, plot_list_turnout)
+          shiny::incProgress(2/10)
+          plot_list_lib_lab = generate_plot_libdem_labour(input_data)
+          shiny::incProgress(3/10)
+          
+          plot_list = c(plot_list_ward, plot_list_road, plot_list_tory, plot_list_turnout, plot_list_lib_lab)
           generate_plot_zip(file, plot_list)
         }
       
